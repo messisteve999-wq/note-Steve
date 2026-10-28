@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
         titleInput = EditText(this).apply {
             hint = "Titre de la note"
             textSize = 18f
-            singleLine = true
+            isSingleLine = true
         }
         root.addView(titleInput, ViewGroup.LayoutParams(-1, 58))
 
