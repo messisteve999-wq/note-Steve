@@ -196,6 +196,48 @@ class FloatingNoteService : Service() {
         actionButton("Coller") { pasteClipboard() }
         box.addView(actions, LinearLayout.LayoutParams(-1, dp(54)))
 
+        val bottomActions = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER
+        }
+
+        fun bottomButton(label: String, action: () -> Unit) {
+            val button = Button(this).apply {
+                text = label
+                textSize = 12f
+                isAllCaps = false
+                setTextColor(Color.WHITE)
+                background = roundedBackground(
+                    Color.rgb(47, 25, 30),
+                    Color.rgb(255, 48, 63)
+                )
+                setOnClickListener { action() }
+            }
+            bottomActions.addView(
+                button,
+                LinearLayout.LayoutParams(0, dp(46), 1f).apply {
+                    setMargins(dp(3), dp(4), dp(3), dp(2))
+                }
+            )
+        }
+
+        bottomButton("Enregistrer") {
+            saveFloatingText(textEditor.text.toString())
+            Toast.makeText(
+                this, "Texte enregistré", Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        bottomButton("Fermer") {
+            saveFloatingText(textEditor.text.toString())
+            stopSelf()
+        }
+
+        box.addView(
+            bottomActions,
+            LinearLayout.LayoutParams(-1, dp(54))
+        )
+
         val selectAll = Button(this).apply {
             text = "Tout sélectionner"
             isAllCaps = false
