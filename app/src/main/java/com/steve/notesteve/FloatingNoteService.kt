@@ -128,14 +128,19 @@ class FloatingNoteService : Service() {
         bubble = icon
         try {
             windowManager.addView(icon, p)
-        } catch (_: Exception) {
+        } catch (e: Exception) {
             bubble = null
+            Toast.makeText(
+                this,
+                "Bulle impossible à afficher : ${e.message ?: "erreur Android"}",
+                Toast.LENGTH_LONG
+            ).show()
             stopSelf()
         }
     }
 
     private fun openPanel() {
-        val saved = NoteStore.load(this).firstOrNull() ?: Note("Ma note", "")
+        val saved = Note("Note flottante", getSharedPreferences("floating_note", MODE_PRIVATE).getString("body", "") ?: "")
         val box = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(12), dp(10), dp(12), dp(12))
@@ -268,10 +273,10 @@ class FloatingNoteService : Service() {
     }
 
     private fun saveFloatingText(body: String) {
-        val notes = NoteStore.load(this).toMutableList()
-        if (notes.isEmpty()) notes.add(Note("Note flottante", body))
-        else notes[0] = notes[0].copy(body = body)
-        NoteStore.save(this, notes)
+        getSharedPreferences("floating_note", MODE_PRIVATE)
+            .edit()
+            .putString("body", body)
+            .apply()
     }
 
     private fun copySelection(cut: Boolean) {

@@ -36,6 +36,13 @@ class MainActivity : ComponentActivity() {
         showNote(0)
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (android.provider.Settings.canDrawOverlays(this)) {
+            startService(Intent(this, FloatingNoteService::class.java))
+        }
+    }
+
     private fun buildUi() {
         val root = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
